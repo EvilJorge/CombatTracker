@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/initiative_item_border">
+
+    <TextView
+        android:id="@+id/character_name_textview"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+
+    <LinearLayout
+        android:id="@+id/status_switch_header"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/character_name_textview">
+        <TextView
+            android:id="@+id/action_label_textview"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="A"
+            android:textAlignment="center" />
+
+        <TextView
+            android:id="@+id/ready_label_textview"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="R"
+            android:textAlignment="center" />
+
+        <TextView
+            android:id="@+id/delay_label_textview"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="D"
+            android:textAlignment="center" />
+    </LinearLayout>
+    <android.support.v7.widget.AppCompatSeekBar
+        android:id="@+id/status_switch"
+        style="@style/Widget.AppCompat.SeekBar.Discrete"
+        android:max="2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/status_switch_header"
+        app:layout_constraintLeft_toLeftOf="@id/status_switch_header"
+        app:layout_constraintRight_toRightOf="@id/status_switch_header"/>
+</android.support.constraint.ConstraintLayout>
