@@ -1,16 +1,20 @@
 package com.example.android.combattracker;
 
 import android.content.Context;
-import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.PopupWindow;
+import android.widget.Toast;
 
-import java.lang.*;
 import java.util.ArrayList;
 
 /**
@@ -34,13 +38,19 @@ public class InitiativeListFragment extends Fragment {
 //    private OnFragmentInteractionListener mListener;
 
     // Initiative List
-    private ArrayList<Character> mInitiativeList = new ArrayList<>();
+    private ArrayList<CharGroup> mInitiativeList = new ArrayList<>();
 
     // ListViews and RecyclerView
     private RecyclerView mInitiativeRecyclerView;
 
     // Data Adapter
     private InitiativeListAdapter mInitiativeListAdapter;
+
+    // Adapter Listener
+    private InitiativeListAdapter.InitiativeListListener mInitiativeListListener;
+
+    // Popup Window
+    public PopupWindow mEnterInitiativeWindow;
 
     public InitiativeListFragment() {
         // Required empty public constructor
@@ -80,8 +90,18 @@ public class InitiativeListFragment extends Fragment {
         ViewGroup rootView = (ViewGroup) inflater.inflate(
                 R.layout.fragment_initiative_list, container, false);
 
+        mInitiativeListListener = new InitiativeListAdapter.InitiativeListListener() {
+            @Override
+            public void initiativeButtonOnClick(View v, int position) {
+                String name = mInitiativeList.get(position).getName();
+
+                Toast.makeText(getContext(), name + "'s initiative button pressed.", Toast.LENGTH_SHORT).show();
+                showEnterInitiativePopup(v);
+            }
+        };
+
         // Attach lists to list Adapters
-        mInitiativeListAdapter = new InitiativeListAdapter(mInitiativeList);
+        mInitiativeListAdapter = new InitiativeListAdapter(mInitiativeList, mInitiativeListListener);
         mInitiativeRecyclerView = (RecyclerView) rootView.findViewById(R.id.initiative_recview);
         mInitiativeRecyclerView.setAdapter(mInitiativeListAdapter);
 
@@ -93,12 +113,61 @@ public class InitiativeListFragment extends Fragment {
         return rootView;
     }
 
+    /** Event Handlers **/
+
+    // Button handler to return from Enter Initiative Popup.
+
+    public void enterInitiative(View v){
+        int initiative;
+
+//        // Get value from Enter Initiative EditText view in Popup Window
+//        initiative = Integer.parseInt(
+//                ((EditText) mEnterInitiativeWindow.getContentView().findViewById(R.id.enter_initiative_text)).getText().toString()
+//        );
+
+        // Close Popup window
+        mEnterInitiativeWindow.dismiss();
+    }
+
+    /** Other Methods **/
+
+    // Show popup for entering initiative.
+    private void showEnterInitiativePopup(View v){
+        // Inflate PopUp Window to enter initiative
+        LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View popUpView = inflater.inflate(R.layout.popup_enter_initiative, null);
+
+        // Initialize a new instance of popup window
+        mEnterInitiativeWindow = new PopupWindow(popUpView,
+                ActionBar.LayoutParams.WRAP_CONTENT,
+                ActionBar.LayoutParams.WRAP_CONTENT);
+
+        // Set an elevation value for popup window if API is 21 or greater.
+        if(Build.VERSION.SDK_INT >= 21){
+            mEnterInitiativeWindow.setElevation(5.0f);
+        }
+
+        mEnterInitiativeWindow.setFocusable(true);
+        mEnterInitiativeWindow.update();
+        mEnterInitiativeWindow.showAtLocation(v, Gravity.CENTER, 0, 0);
+
+        // Setup onClick for Entery Button
+        View.OnClickListener enterClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                enterInitiative(view);
+            }
+        };
+        Button enterInitiativeButton = (Button) popUpView.findViewById(R.id.enter_initiative_button);
+        enterInitiativeButton.setOnClickListener(enterClickListener);
+    }
+
     public void populateInitList(){
-        Character char1 = new Character("Ashwold");
-        Character char2 = new Character("Dante");
-        Character char3 = new Character("Cyran");
-        Character char4 = new Character("Brianna");
-        Character char5 = new Character("Rashe");
+        CharGroup char1 = new CharGroup("Ashwold");
+        CharGroup char2 = new CharGroup("Dante");
+        CharGroup char3 = new CharGroup("Cyran");
+        CharGroup char4 = new CharGroup("Brianna");
+        CharGroup char5 = new CharGroup("Rashe");
 
         mInitiativeList.add(char1);
         mInitiativeList.add(char2);

@@ -11,7 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 public class MainActivity extends AppCompatActivity {
 
 //    // Initiative List
-//    private ArrayList<Character> mInitiativeList = new ArrayList<>();
+//    private ArrayList<CharGroup> mInitiativeList = new ArrayList<>();
 //
 //    // ListViews and RecyclerView
 //    private RecyclerView mInitiativeRecyclerView;
@@ -66,6 +66,18 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+//    // Event Handlers
+//    public void openEnterInitiativeWindow(View view) {
+//        Toast.makeText(getBaseContext(), "Initiative button pressed.", Toast.LENGTH_SHORT).show();
+//
+//        ConstraintLayout vwParentRow = (ConstraintLayout) view.getParent();
+//
+//        Button btnChild = (Button) vwParentRow.getChildAt(0);
+//
+//        btnChild.setText("10");
+//
+//    }
+
     // A simple pager adapter that handles 2 screens for the mobile platform
     private class TrackerPagerAdapter extends FragmentStatePagerAdapter {
         public TrackerPagerAdapter(FragmentManager fm){
@@ -84,11 +96,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
 //    public void populateInitList(){
-//        Character char1 = new Character("Ashwold");
-//        Character char2 = new Character("Dante");
-//        Character char3 = new Character("Cyran");
-//        Character char4 = new Character("Brianna");
-//        Character char5 = new Character("Rashe");
+//        CharGroup char1 = new CharGroup("Ashwold");
+//        CharGroup char2 = new CharGroup("Dante");
+//        CharGroup char3 = new CharGroup("Cyran");
+//        CharGroup char4 = new CharGroup("Brianna");
+//        CharGroup char5 = new CharGroup("Rashe");
 //
 //        mInitiativeList.add(char1);
 //        mInitiativeList.add(char2);
