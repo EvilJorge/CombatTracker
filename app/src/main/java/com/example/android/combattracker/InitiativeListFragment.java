@@ -12,10 +12,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -26,15 +29,6 @@ import java.util.ArrayList;
  * create an instance of this fragment.
  */
 public class InitiativeListFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-//    private static final String ARG_PARAM1 = "param1";
-//    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-//    private String mParam1;
-//    private String mParam2;
-
 //    private OnFragmentInteractionListener mListener;
 
     // Initiative List
@@ -56,23 +50,7 @@ public class InitiativeListFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment InitiativeListFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-//    public static InitiativeListFragment newInstance(String param1, String param2) {
-//        InitiativeListFragment fragment = new InitiativeListFragment();
-//        Bundle args = new Bundle();
-//        args.putString(ARG_PARAM1, param1);
-//        args.putString(ARG_PARAM2, param2);
-//        fragment.setArguments(args);
-//        return fragment;
-//    }
+    /** Class Overrides **/
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -96,7 +74,7 @@ public class InitiativeListFragment extends Fragment {
                 String name = mInitiativeList.get(position).getName();
 
                 Toast.makeText(getContext(), name + "'s initiative button pressed.", Toast.LENGTH_SHORT).show();
-                showEnterInitiativePopup(v);
+                showEnterInitiativePopup(v, position);
             }
         };
 
@@ -117,13 +95,21 @@ public class InitiativeListFragment extends Fragment {
 
     // Button handler to return from Enter Initiative Popup.
 
-    public void enterInitiative(View v){
+    public void enterInitiative(View v, int position){
         int initiative;
 
-//        // Get value from Enter Initiative EditText view in Popup Window
-//        initiative = Integer.parseInt(
-//                ((EditText) mEnterInitiativeWindow.getContentView().findViewById(R.id.enter_initiative_text)).getText().toString()
-//        );
+        // Get value from Enter Initiative EditText view in Popup Window
+        initiative = Integer.parseInt(
+                ((EditText) mEnterInitiativeWindow.getContentView().findViewById(R.id.enter_initiative_text)).getText().toString()
+        );
+
+        mInitiativeList.get(position).setInitiative(initiative);
+        //mInitiativeListAdapter.notifyItemChanged(position);
+
+        // Sort List and notify adapter of data change
+        Collections.sort(mInitiativeList, new InitiativeComparator());
+        Collections.reverse(mInitiativeList);
+        mInitiativeListAdapter.notifyDataSetChanged();
 
         // Close Popup window
         mEnterInitiativeWindow.dismiss();
@@ -132,7 +118,7 @@ public class InitiativeListFragment extends Fragment {
     /** Other Methods **/
 
     // Show popup for entering initiative.
-    private void showEnterInitiativePopup(View v){
+    private void showEnterInitiativePopup(View v, final int position){
         // Inflate PopUp Window to enter initiative
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View popUpView = inflater.inflate(R.layout.popup_enter_initiative, null);
@@ -151,11 +137,11 @@ public class InitiativeListFragment extends Fragment {
         mEnterInitiativeWindow.update();
         mEnterInitiativeWindow.showAtLocation(v, Gravity.CENTER, 0, 0);
 
-        // Setup onClick for Entery Button
+        // Setup onClick for Enter Button
         View.OnClickListener enterClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                enterInitiative(view);
+                enterInitiative(view, position);
             }
         };
         Button enterInitiativeButton = (Button) popUpView.findViewById(R.id.enter_initiative_button);
@@ -176,42 +162,21 @@ public class InitiativeListFragment extends Fragment {
         mInitiativeList.add(char5);
     }
 
-//    // TODO: Rename method, update argument and hook method into UI event
-//    public void onButtonPressed(Uri uri) {
-//        if (mListener != null) {
-//            mListener.onFragmentInteraction(uri);
-//        }
-//    }
-//
-//    @Override
-//    public void onAttach(Context context) {
-//        super.onAttach(context);
-//        if (context instanceof OnFragmentInteractionListener) {
-//            mListener = (OnFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
-//    }
-//
-//    @Override
-//    public void onDetach() {
-//        super.onDetach();
-//        mListener = null;
-//    }
-//
-//    /**
-//     * This interface must be implemented by activities that contain this
-//     * fragment to allow an interaction in this fragment to be communicated
-//     * to the activity and potentially other fragments contained in that
-//     * activity.
-//     * <p>
-//     * See the Android Training lesson <a href=
-//     * "http://developer.android.com/training/basics/fragments/communicating.html"
-//     * >Communicating with Other Fragments</a> for more information.
-//     */
-//    public interface OnFragmentInteractionListener {
-//        // TODO: Update argument type and name
-//        void onFragmentInteraction(Uri uri);
-//    }
+    /** Additional Classes **/
+
+    // Comparator used to sort by Initiative
+    public class InitiativeComparator implements Comparator<CharGroup>{
+        public int compare(CharGroup first, CharGroup second){
+            int firstInit = first.getInitiative();
+            int secondInit = second.getInitiative();
+
+            if(firstInit == secondInit) {
+                return 0;
+            } else if(firstInit > secondInit){
+                return 1;
+            } else {
+                return -1;
+            }
+        }
+    }
 }
