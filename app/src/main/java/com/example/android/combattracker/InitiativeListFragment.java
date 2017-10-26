@@ -96,23 +96,31 @@ public class InitiativeListFragment extends Fragment {
     // Button handler to return from Enter Initiative Popup.
 
     public void enterInitiative(View v, int position){
+        EditText initEditText = (EditText) mEnterInitiativeWindow.getContentView().findViewById(R.id.enter_initiative_text);
         int initiative;
 
         // Get value from Enter Initiative EditText view in Popup Window
-        initiative = Integer.parseInt(
-                ((EditText) mEnterInitiativeWindow.getContentView().findViewById(R.id.enter_initiative_text)).getText().toString()
-        );
+//        initiative = Integer.parseInt(
+//                ((EditText) mEnterInitiativeWindow.getContentView().findViewById(R.id.enter_initiative_text)).getText().toString()
+//        );
 
-        mInitiativeList.get(position).setInitiative(initiative);
-        //mInitiativeListAdapter.notifyItemChanged(position);
+        // If EditText entry is valid, set initiative value and close window.
+        // Else, show enter message.
+        if (!initEditText.getText().toString().equals("")) {
+            initiative = Integer.parseInt(initEditText.getText().toString());
+            mInitiativeList.get(position).setInitiative(initiative);
+            //mInitiativeListAdapter.notifyItemChanged(position);
 
-        // Sort List and notify adapter of data change
-        Collections.sort(mInitiativeList, new InitiativeComparator());
-        Collections.reverse(mInitiativeList);
-        mInitiativeListAdapter.notifyDataSetChanged();
+            // Sort List and notify adapter of data change
+            Collections.sort(mInitiativeList, new InitiativeComparator());
+            Collections.reverse(mInitiativeList);
+            mInitiativeListAdapter.notifyDataSetChanged();
 
-        // Close Popup window
-        mEnterInitiativeWindow.dismiss();
+            // Close Popup window
+            mEnterInitiativeWindow.dismiss();
+        } else {
+            Toast.makeText(getContext(), "Enter an initiative value.", Toast.LENGTH_SHORT).show();
+        }
     }
 
     /** Other Methods **/
